@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
-import { Plus, List, Kanban, ArrowLeft, X, ChevronUp, ChevronDown } from 'lucide-react'
+import { Plus, List, Kanban, ArrowLeft, X } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import { apiRequest } from '@/lib/auth'
@@ -151,29 +151,29 @@ export default function ProjectPage() {
   return (
     <div className="h-screen flex flex-col">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-100 bg-white flex items-center justify-between flex-shrink-0">
+      <div className="px-6 py-4 border-b border-[#30363d] bg-white flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <Link href={`/workspace/${slug}/projects`} className="text-gray-400 hover:text-gray-600">
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-sm font-semibold text-gray-900">{project?.name}</h1>
+            <h1 className="text-sm font-semibold text-[#e6edf3]">{project?.name}</h1>
             <p className="text-xs text-gray-400 font-mono">{project?.identifier}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex border border-gray-200 rounded-lg overflow-hidden">
             <button onClick={() => setView('kanban')}
-              className={`px-3 py-1.5 text-xs font-medium flex items-center gap-1.5 transition-colors ${view === 'kanban' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}>
+              className={`px-3 py-1.5 text-xs font-medium flex items-center gap-1.5 transition-colors ${view === 'kanban' ? 'bg-gray-500 text-white' : 'text-[#7d8590] hover:bg-[#161b22]'}`}>
               <Kanban className="w-3.5 h-3.5" /> Board
             </button>
             <button onClick={() => setView('list')}
-              className={`px-3 py-1.5 text-xs font-medium flex items-center gap-1.5 transition-colors ${view === 'list' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}>
+              className={`px-3 py-1.5 text-xs font-medium flex items-center gap-1.5 transition-colors ${view === 'list' ? 'bg-gray-500 text-white' : 'text-[#7d8590] hover:bg-[#161b22]'}`}>
               <List className="w-3.5 h-3.5" /> List
             </button>
           </div>
           <button onClick={() => setShowCreate(true)}
-            className="flex items-center gap-1.5 bg-gray-900 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-700">
+            className="flex items-center gap-1.5 bg-gray-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-700">
             <Plus className="w-3.5 h-3.5" /> New issue
           </button>
         </div>
@@ -196,7 +196,7 @@ export default function ProjectPage() {
                       <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className={`flex-1 rounded-xl p-2 space-y-2 min-h-24 transition-colors ${snapshot.isDraggingOver ? 'bg-gray-100' : 'bg-gray-50'}`}
+                        className={`flex-1 rounded-xl p-2 space-y-2 min-h-24 transition-colors ${snapshot.isDraggingOver ? 'bg-gray-100' : 'bg-[#161b22]'}`}
                       >
                         {issues[status].map((issue, index) => (
                           <Draggable key={issue.id} draggableId={issue.id} index={index}>
@@ -206,11 +206,11 @@ export default function ProjectPage() {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                                 onClick={() => fetchIssueDetail(issue.id)}
-                                className={`bg-white border rounded-lg p-3 cursor-pointer hover:border-gray-300 transition-all ${snapshot.isDragging ? 'shadow-lg border-gray-300' : 'border-gray-100'}`}
+                                className={`bg-white border rounded-lg p-3 cursor-pointer hover:border-gray-300 transition-all ${snapshot.isDragging ? 'shadow-lg border-gray-300' : 'border-[#30363d]'}`}
                               >
                                 <div className="flex items-start justify-between gap-2 mb-2">
-                                  <p className="text-xs font-medium text-gray-900 leading-relaxed">{issue.title}</p>
-                                  <span className={`text-sm flex-shrink-0 ${PRIORITY_COLORS[issue.priority]}`}>
+                                  <p className="text-xs font-medium text-[#e6edf3] leading-relaxed">{issue.title}</p>
+                                  <span className={`text-sm shrink-0 ${PRIORITY_COLORS[issue.priority]}`}>
                                     {PRIORITY_ICONS[issue.priority]}
                                   </span>
                                 </div>
@@ -240,7 +240,7 @@ export default function ProjectPage() {
       {/* List view */}
       {view === 'list' && (
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+          <div className="bg-white border border-[#30363d] rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-50">
@@ -254,9 +254,9 @@ export default function ProjectPage() {
               <tbody className="divide-y divide-gray-50">
                 {allIssues.map(issue => (
                   <tr key={issue.id} onClick={() => fetchIssueDetail(issue.id)}
-                    className="hover:bg-gray-50/50 cursor-pointer">
+                    className="hover:bg-[#161b22]/50 cursor-pointer">
                     <td className="px-4 py-3 text-xs text-gray-400 font-mono">{issue.identifier}</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">{issue.title}</td>
+                    <td className="px-4 py-3 text-sm text-[#e6edf3] font-medium">{issue.title}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5">
                         <div className={`w-1.5 h-1.5 rounded-full ${STATUS_COLORS[issue.status as Status]}`} />
@@ -298,7 +298,7 @@ export default function ProjectPage() {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="font-semibold text-gray-900">New issue</h2>
+              <h2 className="font-semibold text-[#e6edf3]">New issue</h2>
               <button onClick={() => setShowCreate(false)}><X className="w-4 h-4 text-gray-400" /></button>
             </div>
             <div className="space-y-4 mb-6">
@@ -330,11 +330,11 @@ export default function ProjectPage() {
             </div>
             <div className="flex gap-3">
               <button onClick={() => setShowCreate(false)}
-                className="flex-1 border border-gray-200 text-gray-700 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50">
+                className="flex-1 border border-gray-200 text-gray-700 py-2.5 rounded-lg text-sm font-medium hover:bg-[#161b22]">
                 Cancel
               </button>
               <button onClick={createIssue} disabled={creating || !newTitle.trim()}
-                className="flex-1 bg-gray-900 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-gray-700 disabled:opacity-50">
+                className="flex-1 bg-gray-500 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-gray-700 disabled:opacity-50">
                 {creating ? 'Creating...' : 'Create issue'}
               </button>
             </div>
@@ -399,8 +399,8 @@ function IssueDetail({ issue, slug, onClose, onUpdate }: {
   return (
     <div className="fixed inset-0 z-50 flex">
       <div className="flex-1 bg-black/20" onClick={onClose} />
-      <div className="w-[480px] bg-white shadow-2xl overflow-y-auto flex flex-col">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+      <div className="w-120 bg-white shadow-2xl overflow-y-auto flex flex-col">
+        <div className="px-6 py-4 border-b border-[#30363d] flex items-center justify-between shrink-0">
           <span className="text-xs text-gray-400 font-mono">{issue.identifier}</span>
           <button onClick={onClose}><X className="w-4 h-4 text-gray-400 hover:text-gray-600" /></button>
         </div>
@@ -409,10 +409,10 @@ function IssueDetail({ issue, slug, onClose, onUpdate }: {
           {editingTitle ? (
             <input type="text" value={title} onChange={e => setTitle(e.target.value)}
               onBlur={saveTitle} onKeyDown={e => e.key === 'Enter' && saveTitle()} autoFocus
-              className="w-full text-lg font-semibold text-gray-900 border-b-2 border-gray-900 focus:outline-none pb-1" />
+              className="w-full text-lg font-semibold text-[#e6edf3] border-b-2 border-[#30363d] focus:outline-none pb-1" />
           ) : (
             <h2 onClick={() => setEditingTitle(true)}
-              className="text-lg font-semibold text-gray-900 cursor-pointer hover:text-gray-600 transition-colors">
+              className="text-lg font-semibold text-[#e6edf3] cursor-pointer hover:text-gray-600 transition-colors">
               {issue.title}
             </h2>
           )}
@@ -455,7 +455,7 @@ function IssueDetail({ issue, slug, onClose, onUpdate }: {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-medium text-gray-900">{c.author.name}</span>
+                      <span className="text-xs font-medium text-[#e6edf3]">{c.author.name}</span>
                       <span className="text-xs text-gray-400">
                         {new Date(c.createdAt).toLocaleDateString()}
                       </span>
@@ -471,7 +471,7 @@ function IssueDetail({ issue, slug, onClose, onUpdate }: {
                 className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
                 placeholder="Add a comment..." />
               <button onClick={postComment} disabled={posting || !comment.trim()}
-                className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 disabled:opacity-50">
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 disabled:opacity-50">
                 Post
               </button>
             </div>

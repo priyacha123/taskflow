@@ -1,69 +1,96 @@
 import Link from 'next/link'
-import { ArrowRight, Check, Users, Kanban, BarChart3, Lock } from 'lucide-react'
+import { ArrowRight, Zap, Shield, Users, BarChart3, Check, Star } from 'lucide-react'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, sans-serif' }}>
+    <div className="min-h-screen bg-[#0d1117] text-[#e6edf3]">
 
       {/* Nav */}
-      <nav className="border-b border-gray-100 px-6 py-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gray-900 rounded-md flex items-center justify-center">
-              <Kanban className="w-3.5 h-3.5 text-white" />
+      <nav className="border-b border-[#30363d] px-6 py-4 sticky top-0 bg-[#0d1117]/95 backdrop-blur-sm z-50">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white" />
             </div>
-            <span className="font-semibold text-sm text-gray-900">TaskFlow</span>
+            <span className="font-bold text-[#e6edf3] text-lg tracking-tight">TaskFlow</span>
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm text-gray-600 hover:text-gray-900">Sign in</Link>
-            <Link href="/register" className="text-sm bg-gray-900 text-white px-3.5 py-1.5 rounded-md hover:bg-gray-700 font-medium">
-              Get started
+
+          <div className="hidden md:flex items-center gap-8">
+            {['Features', 'Pricing', 'Docs'].map(item => (
+              <Link key={item} href={`/${item.toLowerCase()}`}
+                className="text-sm text-[#7d8590] hover:text-[#e6edf3] transition-colors">
+                {item}
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link href="/login" className="text-sm text-[#7d8590] hover:text-[#e6edf3] transition-colors">
+              Sign in
+            </Link>
+            <Link href="/register"
+              className="flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors">
+              Get started <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="pt-20 pb-16 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 border border-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-full mb-6 font-medium">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-            Free to start — no credit card required
+      <section className="pt-24 pb-20 px-6 text-center">
+        <div className="max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-[#161b22] border border-[#30363d] text-[#7d8590] text-xs px-4 py-2 rounded-full mb-8 font-medium">
+            <Star className="w-3.5 h-3.5 text-orange-500" />
+            Built for developers, by developers
           </div>
-          <h1 className="text-5xl font-bold text-gray-900 mb-5 leading-tight tracking-tight">
-            Project management<br />
-            <span className="text-gray-400">for focused teams.</span>
+
+          <h1 className="text-6xl font-black text-[#e6edf3] mb-6 leading-[1.05] tracking-tight">
+            Ship faster.<br />
+            <span className="text-orange-500">Stay organized.</span>
           </h1>
-          <p className="text-lg text-gray-500 mb-8 leading-relaxed">
-            Kanban boards, issue tracking, team collaboration, and role-based access — in one clean workspace.
+
+          <p className="text-xl text-[#7d8590] mb-10 leading-relaxed max-w-xl mx-auto">
+            Project management that gets out of your way. Kanban boards, issue tracking, and team collaboration — all in one dark workspace.
           </p>
-          <div className="flex items-center justify-center gap-3">
-            <Link href="/register" className="flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700 font-medium text-sm">
-              Start for free <ArrowRight className="w-3.5 h-3.5" />
+
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <Link href="/register"
+              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3.5 rounded-full transition-colors text-sm">
+              Start for free <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/login" className="border border-gray-200 text-gray-700 px-5 py-2.5 rounded-md hover:bg-gray-50 font-medium text-sm">
+            <Link href="/login"
+              className="flex items-center gap-2 border border-[#30363d] text-[#e6edf3] hover:bg-[#161b22] font-semibold px-8 py-3.5 rounded-full transition-colors text-sm">
               Sign in
             </Link>
           </div>
+
+          <p className="text-xs text-[#7d8590] mt-4">No credit card required · Free forever on starter plan</p>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-16 bg-gray-50 px-6">
+      {/* Feature cards */}
+      <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <h2 className="text-3xl font-black text-center text-[#e6edf3] mb-3 tracking-tight">
+            Everything your team needs
+          </h2>
+          <p className="text-center text-[#7d8590] mb-12">Built for speed. Designed for focus.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { icon: <Kanban className="w-5 h-5" />, title: 'Kanban boards', desc: 'Drag and drop issues across status columns' },
-              { icon: <Users className="w-5 h-5" />, title: 'Team workspaces', desc: 'Invite members with Owner, Admin, or Member roles' },
-              { icon: <BarChart3 className="w-5 h-5" />, title: 'Issue tracking', desc: 'Track priority, status, assignee and labels' },
-              { icon: <Lock className="w-5 h-5" />, title: 'Role-based access', desc: 'Fine-grained permissions per workspace member' }
+              { icon: <Zap className="w-5 h-5 text-orange-500" />, title: 'Kanban boards', desc: 'Drag and drop issues across columns. Visual, fast, and intuitive.', color: 'border-orange-500/20 hover:border-orange-500/50' },
+              { icon: <Users className="w-5 h-5 text-[#238636]" />, title: 'Team workspaces', desc: 'Multi-tenant with Owner, Admin, and Member roles per workspace.', color: 'border-[#238636]/20 hover:border-[#238636]/50' },
+              { icon: <Shield className="w-5 h-5 text-blue-400" />, title: 'Role-based access', desc: 'Fine-grained permissions. Members only see what they should.', color: 'border-blue-400/20 hover:border-blue-400/50' },
+              { icon: <BarChart3 className="w-5 h-5 text-purple-400" />, title: 'Issue tracking', desc: 'Priority, status, assignee, labels — track everything that matters.', color: 'border-purple-400/20 hover:border-purple-400/50' },
+              { icon: <Zap className="w-5 h-5 text-yellow-400" />, title: 'List + board views', desc: 'Switch between kanban and list view with one click.', color: 'border-yellow-400/20 hover:border-yellow-400/50' },
+              { icon: <Shield className="w-5 h-5 text-pink-400" />, title: 'Invite system', desc: 'Invite teammates via email with role-based access control.', color: 'border-pink-400/20 hover:border-pink-400/50' },
             ].map(f => (
-              <div key={f.title} className="bg-white p-5 rounded-xl border border-gray-100">
-                <div className="w-8 h-8 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center text-gray-600 mb-3">
+              <div key={f.title} className={`bg-[#161b22] border rounded-2xl p-6 transition-all ${f.color}`}>
+                <div className="w-10 h-10 bg-[#0d1117] rounded-xl flex items-center justify-center mb-4 border border-[#30363d]">
                   {f.icon}
                 </div>
-                <p className="font-medium text-gray-900 text-sm mb-1">{f.title}</p>
-                <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>
+                <h3 className="font-bold text-[#e6edf3] mb-2">{f.title}</h3>
+                <p className="text-sm text-[#7d8590] leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -71,39 +98,46 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-[#161b22]">
         <div className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3 tracking-tight">Simple pricing</h2>
-          <p className="text-gray-500">Start free. Upgrade when your team grows.</p>
+          <h2 className="text-3xl font-black text-[#e6edf3] mb-3 tracking-tight">Simple pricing</h2>
+          <p className="text-[#7d8590]">Start free. Upgrade when your team grows.</p>
         </div>
-        <div className="max-w-2xl mx-auto grid grid-cols-2 gap-5">
+
+        <div className="max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
           {[
             {
-              name: 'Free', price: '$0', period: 'forever',
-              features: ['1 workspace', '5 projects', '10 members', 'Kanban + list view', 'Basic analytics'],
-              cta: 'Get started free', highlighted: false
+              name: 'Starter', price: '$0', period: 'forever',
+              features: ['1 workspace', '5 projects', '10 members', 'Kanban + list view', 'Issue tracking'],
+              cta: 'Get started free', highlight: false
             },
             {
               name: 'Pro', price: '$12', period: 'per month',
               features: ['Unlimited workspaces', 'Unlimited projects', 'Unlimited members', 'Advanced analytics', 'Priority support'],
-              cta: 'Start Pro', highlighted: true
+              cta: 'Start Pro', highlight: true
             }
           ].map(plan => (
-            <div key={plan.name} className={`p-6 rounded-2xl ${plan.highlighted ? 'border-2 border-gray-900' : 'border border-gray-200'}`}>
-              <p className="font-semibold text-gray-900 mb-1">{plan.name}</p>
-              <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                <span className="text-gray-500 text-sm">/{plan.period}</span>
+            <div key={plan.name} className={`rounded-2xl p-7 border ${plan.highlight ? 'border-orange-500 bg-[#0d1117]' : 'border-[#30363d] bg-[#0d1117]'}`}>
+              {plan.highlight && (
+                <div className="inline-block bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
+                  Most popular
+                </div>
+              )}
+              <p className="font-bold text-[#e6edf3] mb-1">{plan.name}</p>
+              <div className="flex items-baseline gap-1 mb-5">
+                <span className="text-4xl font-black text-[#e6edf3]">{plan.price}</span>
+                <span className="text-[#7d8590] text-sm">/{plan.period}</span>
               </div>
-              <ul className="space-y-2 mb-6">
+              <ul className="space-y-2.5 mb-7">
                 {plan.features.map(f => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
-                    <Check className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                  <li key={f} className="flex items-center gap-2.5 text-sm text-[#7d8590]">
+                    <Check className="w-4 h-4 text-[#238636] flex-shrink-0" />
                     {f}
                   </li>
                 ))}
               </ul>
-              <Link href="/register" className={`block text-center text-sm font-medium py-2.5 rounded-lg transition-colors ${plan.highlighted ? 'bg-gray-900 text-white hover:bg-gray-700' : 'border border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
+              <Link href="/register"
+                className={`block text-center text-sm font-bold py-3 rounded-full transition-colors ${plan.highlight ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'border border-[#30363d] text-[#e6edf3] hover:bg-[#161b22]'}`}>
                 {plan.cta}
               </Link>
             </div>
@@ -111,23 +145,40 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* CTA */}
+      <section className="py-20 px-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-4xl font-black text-[#e6edf3] mb-4 tracking-tight">
+            Ready to ship faster?
+          </h2>
+          <p className="text-[#7d8590] mb-8">Join teams who manage their work with TaskFlow.</p>
+          <Link href="/register"
+            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-full transition-colors">
+            Get started for free <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="border-t border-gray-100 py-8 px-6">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
+      <footer className="border-t border-[#30363d] py-8 px-6">
+        <div className="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-gray-900 rounded flex items-center justify-center">
-              <Kanban className="w-3 h-3 text-white" />
+            <div className="w-5 h-5 bg-orange-500 rounded flex items-center justify-center">
+              <Zap className="w-3 h-3 text-white" />
             </div>
-            <span className="text-sm font-medium text-gray-900">TaskFlow</span>
+            <span className="font-bold text-[#e6edf3] text-sm">TaskFlow</span>
           </div>
-          <p className="text-xs text-gray-400">Built by Priya Kumari</p>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-xs text-gray-400 hover:text-gray-600">Sign in</Link>
-            <Link href="/register" className="text-xs text-gray-400 hover:text-gray-600">Register</Link>
+          <p className="text-xs text-[#7d8590]">Built by Priya Kumari · © 2026 TaskFlow</p>
+          <div className="flex gap-6">
+            {['Sign in', 'Register'].map(item => (
+              <Link key={item} href={`/${item.toLowerCase().replace(' ', '')}`}
+                className="text-xs text-[#7d8590] hover:text-[#e6edf3] transition-colors">
+                {item}
+              </Link>
+            ))}
           </div>
         </div>
       </footer>
-
     </div>
   )
 }
