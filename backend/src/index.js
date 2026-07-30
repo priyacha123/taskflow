@@ -47,6 +47,7 @@ app.use('/workspaces/:slug/projects', projectRoutes)
 app.use('/workspaces/:slug/projects/:projectId/issues', issueRoutes)
 app.use('/workspaces/:slug/issues/:issueId/comments', commentRoutes)
 app.use('/workspaces/:slug/labels', labelRoutes)
+app.use('/workspaces/:slug/issues', issueRoutes)
 app.use('/invite', invitationRoutes)
 
 app.use((err, req, res, next) => {
