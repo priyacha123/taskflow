@@ -140,13 +140,21 @@ const webhookHandler = async (req, res) => {
           where: { stripeSubscriptionId: subscription.id }
         })
 
-        if (workspace) {
+        // Only map statuses we understand. Stripe emits many transient states
+        // (trialing, incomplete, paused, incomplete_expired) that must not be
+        // treated as cancelled — leave those unchanged.
+        const statusMap = {
+          active: 'ACTIVE',
+          past_due: 'PAST_DUE',
+          unpaid: 'PAST_DUE',
+          canceled: 'CANCELLED'
+        }
+        const subscriptionStatus = statusMap[subscription.status]
+
+        if (workspace && subscriptionStatus) {
           await prisma.workspace.update({
             where: { id: workspace.id },
-            data: {
-              subscriptionStatus: subscription.status === 'active' ? 'ACTIVE' :
-                subscription.status === 'past_due' ? 'PAST_DUE' : 'CANCELLED'
-            }
+            data: { subscriptionStatus }
           })
         }
         break

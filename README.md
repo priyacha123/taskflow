@@ -1,151 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaskFlow
 
-## Getting Started
+A multi-tenant project management SaaS with kanban boards, issue tracking, role-based access control, and Stripe billing.
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# TaskFlow — Multi-tenant Project Management SaaS
-
-A full-stack multi-tenant SaaS project management tool with kanban boards, issue tracking, role-based access control, and Stripe billing.
-
-**Live:** https://your-frontend.vercel.app
-**API:** https://your-backend.railway.app
-**Demo:** owner@demo.com / demo123456
+**Live:** https://your-frontend.vercel.app  
+**API:** https://your-backend.railway.app  
+**Demo login:** owner@demo.com / demo123456
 
 ---
 
-## What is multi-tenancy?
+## What's in this repo
 
-One app, one database, multiple isolated teams (tenants). Every workspace is a tenant. Users in Workspace A can never see data from Workspace B — enforced at the query level via `workspaceId` on every tenant-scoped table.
+```
+taskflow/
+├── backend/     Express API — auth, workspaces, projects, issues, billing
+└── frontend/    Next.js app — kanban, issue tracking, workspace management
+```
+
+---
+
+## The multi-tenancy model
+
+Every workspace is an isolated tenant. Users in Workspace A never see data from Workspace B — enforced at the query level via `workspaceId` on every tenant-scoped table. This is row-level isolation — one database, many tenants.
 
 ```
 User
-  ↓ (WorkspaceMember with role)
-Workspace ← tenant
+  ↓ WorkspaceMember (role: OWNER / ADMIN / MEMBER)
+Workspace
   ↓
-Project (workspaceId)
+Project   (workspaceId)
   ↓
-Issue (workspaceId + projectId)
+Issue     (workspaceId + projectId)
   ↓
 Comment
 ```
 
 ---
 
-## Architecture
+## Role-based access
 
-```
-Next.js Frontend (Vercel)
-  ↓
-Express Backend (Railway)
-  ↓
-PostgreSQL (Neon) + Stripe webhooks
-```
-
----
-
-## Role-based access (RBAC)
-
-| Role | Permissions |
+| Role | What they can do |
 |---|---|
-| OWNER | Full control — delete workspace, manage billing, change any role |
-| ADMIN | Manage members and projects, cannot touch billing or delete workspace |
-| MEMBER | Work on issues, view projects, cannot manage workspace |
+| OWNER | Everything — billing, delete workspace, change any role |
+| ADMIN | Manage members and projects, cannot touch billing |
+| MEMBER | Work on issues, cannot manage workspace settings |
 
-Enforced via `workspaceMiddleware` (verifies membership) + `requireRole(...roles)` on sensitive routes.
+Enforced via two middlewares chained on every workspace route: `workspaceMiddleware` (verifies membership + attaches `req.workspace`) → `requireRole(...roles)` (checks role before sensitive operations).
 
 ---
 
 ## Kanban position algorithm
 
-Issue ordering uses float positions with midpoint insertion (LexoRank pattern):
+Issue ordering uses float positions. When you drag an issue between two others:
 
-- Issue at position 1.0, next at 2.0
-- Insert between them: `(1.0 + 2.0) / 2 = 1.5`
-- No re-numbering needed on every drag
+```
+Before: [1.0]  [2.0]
+Insert between: (1.0 + 2.0) / 2 = 1.5
+After:  [1.0]  [1.5]  [2.0]
+```
+
+No re-numbering needed on every move. Progressively subdivides indefinitely. This is the LexoRank pattern used by Linear, Jira, and Trello.
 
 ---
 
 ## Plan limits
 
-| Feature | Free | Pro |
+| | Free | Pro |
 |---|---|---|
 | Workspaces | 1 | Unlimited |
 | Projects | 5 | Unlimited |
 | Members | 10 | Unlimited |
 | Price | $0 | $12/month |
 
+Limits enforced at the API layer — not just the frontend. Hitting a limit returns `403` with an upgrade message regardless of how the request is made.
+
 ---
 
 ## Tech stack
 
-**Backend:** Node.js, Express, PostgreSQL, Prisma, JWT, bcrypt, Stripe, Resend
-**Frontend:** Next.js, TypeScript, Tailwind CSS, @hello-pangea/dnd
-**Infrastructure:** Railway, Vercel, Neon, Stripe
+**Backend** — Node.js, Express, PostgreSQL, Prisma 5, JWT, bcrypt, Stripe, Resend  
+**Frontend** — Next.js 15, TypeScript, Tailwind CSS, @hello-pangea/dnd  
+**Infrastructure** — Railway (API), Vercel (frontend), Neon (PostgreSQL)
 
 ---
 
 ## Local setup
 
+**Prerequisites:** Node.js v18+, Neon account, Stripe test account, Resend account
+
+**Backend:**
 ```bash
-git clone https://github.com/priyacha123/taskflow-backend
-cd taskflow-backend
+cd backend
 npm install
 cp .env.example .env
-# fill in DATABASE_URL, JWT_SECRET, STRIPE keys, RESEND_API_KEY
+# fill in all values — see Environment variables below
 npx prisma migrate dev
-node scripts/seed.js
-npm run dev
+node scripts/seed.js    # optional demo data
+npm run dev             # runs on port 4000
 ```
 
+**Frontend:**
 ```bash
-git clone https://github.com/priyacha123/taskflow-frontend
-cd taskflow-frontend
+cd frontend
 npm install
-# create .env.local with NEXT_PUBLIC_API_URL=http://localhost:4000
-npm run dev
+# create .env.local
+echo "NEXT_PUBLIC_API_URL=http://localhost:4000" > .env.local
+npm run dev             # runs on port 3000
 ```
 
 ---
 
 ## Environment variables
 
+**backend/.env**
+
 | Variable | Description |
 |---|---|
 | `DATABASE_URL` | Neon PostgreSQL connection string |
-| `JWT_SECRET` | Secret for signing JWT tokens (7 day expiry) |
-| `STRIPE_SECRET_KEY` | Stripe secret key (sk_test_ for dev) |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
-| `STRIPE_PRO_PRICE_ID` | Stripe price ID for Pro plan |
+| `JWT_SECRET` | Any long random string — signs 7-day JWTs |
+| `STRIPE_SECRET_KEY` | Stripe secret key (`sk_test_` for dev) |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret (`whsec_`) |
+| `STRIPE_PRO_PRICE_ID` | Stripe price ID for Pro plan (`price_`) |
 | `RESEND_API_KEY` | Resend API key for invitation emails |
-| `FRONTEND_URL` | Frontend URL for CORS and redirect URLs |
+| `FRONTEND_URL` | Frontend URL for CORS and Stripe redirect URLs |
+| `PORT` | Server port (default 4000) |
+
+**frontend/.env.local**
+
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | Backend URL |
+
+---
+
+## Deployment
+
+**Backend → Railway**
+- Connect GitHub repo → set Root Directory to `backend`
+- Add all environment variables from the table above
+- Railway auto-deploys on every push to main
+
+**Frontend → Vercel**
+- Connect GitHub repo → set Root Directory to `frontend`
+- Add `NEXT_PUBLIC_API_URL` pointing to Railway URL
+- Vercel auto-deploys on every push to main
+
+**Stripe webhooks (production)**
+- Stripe dashboard → Developers → Webhooks → Add endpoint
+- URL: `https://your-railway-url.up.railway.app/webhook/stripe`
+- Events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
+
+---
+
+## Demo accounts
+
+| Email | Password | Role |
+|---|---|---|
+| owner@demo.com | demo123456 | OWNER |
+| member@demo.com | demo123456 | MEMBER |
+
+Both accounts belong to `demo-workspace` with 10 seeded issues across all statuses.
+
+---
