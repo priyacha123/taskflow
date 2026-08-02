@@ -16,8 +16,7 @@ const app = express()
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'http://localhost:3001',
-    'https://your-actual-vercel-url.vercel.app',
+    'https://taskflow-mocha-nine.vercel.app',
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -56,5 +55,5 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message })
 })
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 8000
 app.listen(PORT, () => console.log(`TaskFlow backend running on port ${PORT}`))
