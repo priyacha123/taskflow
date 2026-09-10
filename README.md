@@ -2,9 +2,8 @@
 
 A multi-tenant project management SaaS with kanban boards, issue tracking, role-based access control, and Stripe billing.
 
-**Live:** https://your-frontend.vercel.app  
-**API:** https://your-backend.railway.app  
-**Demo login:** owner@demo.com / demo123456
+**Live:** https://taskflow-mocha-nine.vercel.app
+**API:** https://taskflow-opca.onrender.com 
 
 ---
 
